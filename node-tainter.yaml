@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: node-tainter
+  namespace: node-tainter
+spec:
+  selector:
+    matchLabels:
+      name: node-tainter
+  template:
+    metadata:
+      labels:
+        name: node-tainter
+    spec:
+      tolerations:
+      - key: worker
+        value: load-balancer
+      containers:
+      - name: node-tainter
+        image: quay.io/dcritch/node-tainter
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: INSPECT_NS
+          value: "openshift-dns"
+        - name: NODE_NAME
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: spec.nodeName
+        - name: TAINT_KEY
+          value: "worker"
+        - name: TAINT_VALUE
+          value: "load-balancer"
+        - name: POD_NAME
+          value: "openshift-dns"
+        - name: SLEEP_MINUTES
+          value: "10"
+        command:
+        - /bin/bash
+        - -c
+        - |
+          while /bin/true; do
+            /check_taint.sh
+            echo checking again in $SLEEP_MINUTES minutes
+            sleep $(expr 60 \* $SLEEP_MINUTES)
+          done
+      temintationGracePeriodSeconds: 10
+      nodeSelector:
+        node-role.kubernetes.io/load-balancer: ""
