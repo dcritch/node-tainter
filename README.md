@@ -68,7 +68,7 @@ spec:
 Deploy:
 ```
 kubectl create namespace node-tainter
-kubectl apply -f node-tainter-role.yaml
-kubectl apply -f node-tainter-role-binding.yaml
+kubectl create -f node-tainter-role.yaml
+kubectl create -f node-tainter-role-binding.yaml
 kubectl create -f node-tainter-ds.yaml 
 ```
