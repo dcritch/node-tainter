@@ -65,10 +65,18 @@ spec:
         node-role.kubernetes.io/load-balancer: ""
 ```
 
-Deploy:
+Deploy on kubernetes:
 ```
 kubectl create namespace node-tainter
 kubectl create -f node-tainter-role.yaml
 kubectl create -f node-tainter-role-binding.yaml
-kubectl create -f node-tainter-ds.yaml 
+kubectl create -f node-tainter-ds.yaml --validate=false
+```
+
+or OpenShift:
+```
+oc new-project node-tainter
+oc create -f node-tainter-role.yaml
+oc create -f node-tainter-role-binding.yaml
+oc create -f node-tainter-ds.yaml
 ```
