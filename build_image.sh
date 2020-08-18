@@ -8,7 +8,6 @@ tar -xzvf oc.tar.gz oc
 
 export IMAGE=node-tainter
 export TAG=${1:-latest}
-export REGISTRY=quay.io/dcritch
 
 echo building $IMAGE:$TAG
 
@@ -16,7 +15,6 @@ podman login -u $REDHAT_USER -p $REDHAT_PW registry.redhat.io
 container=$(buildah from registry.redhat.io/ubi8-minimal)
 echo "building container with id $container"
 buildah config --label maintainer="David Critch <dcritch@gmail.com>" $container
-#buildah run $container dnf -y install jq
 buildah run $container microdnf -y install jq
 buildah copy $container ./oc /usr/local/bin
 buildah copy $container ./check_taint.sh /
